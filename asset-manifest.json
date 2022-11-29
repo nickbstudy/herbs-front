@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/herbs-front/static/css/main.073c9b0a.css",
+    "main.js": "/herbs-front/static/js/main.c2cf251e.js",
+    "static/js/787.99fb50bf.chunk.js": "/herbs-front/static/js/787.99fb50bf.chunk.js",
+    "static/media/logo.svg": "/herbs-front/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/herbs-front/index.html",
+    "main.073c9b0a.css.map": "/herbs-front/static/css/main.073c9b0a.css.map",
+    "main.c2cf251e.js.map": "/herbs-front/static/js/main.c2cf251e.js.map",
+    "787.99fb50bf.chunk.js.map": "/herbs-front/static/js/787.99fb50bf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.c2cf251e.js"
+  ]
+}
