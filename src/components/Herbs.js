@@ -7,8 +7,9 @@ import { useHerbsContext } from '../hooks/useHerbsContext'
 
 const Herbs = () => {
 
-    // const [herbs, setHerbs] = useState([])
-    const { herbs, dispatch } = useHerbsContext()
+    const { results, dispatch } = useHerbsContext()
+    const [firstGet, setFirstGet] = useState(false)
+    const [search, setSearch] = useState("")
     const [formName, setFormName] = useState("")
     const [formMonth, setFormMonth] = useState("")
     const [formYear, setFormYear] = useState(2023)
@@ -25,6 +26,12 @@ const Herbs = () => {
     }
     const handleShow = () => setShow(true);
 
+    const handleSearch = async (e) => {
+        setSearch(e.target.value)
+    }
+    const clearSearch = () => {
+        setSearch("")
+    }
     const handleFormName = (e) => {
         setFormName(e.target.value)
     }
@@ -53,6 +60,7 @@ const Herbs = () => {
         }
 
         delHerb()
+
     }
 
     const handleSubmit = (e) => {
@@ -98,13 +106,30 @@ const Herbs = () => {
                     }
                 })
                 const json = await response.json()
+
+                const dispatchLoad = {
+                    _id: json._id,
+                    name: json.name,
+                    amount: json.amount,
+                    expiry: json.expiry,
+                    search: search
+                }
+
                 if (!response.ok) {
                     alert(json.error)
                 }
                 if (response.ok) {
-                    // console.log(json)
-                    dispatch({type: "CREATE_HERB", payload: json})
+                    
+                    // json.search = search
+                    // console.log('json with search:')
+                    console.log('dispatchLoad from herbs.js')
+                    console.log(dispatchLoad)
+                    dispatch({type: "CREATE_HERB", payload: dispatchLoad})
+                    setFormName("")
+                    setFormMonth("")
+                    setFormYear(2023)
                     setShow(false)
+                    
                 }
             }
 
@@ -148,51 +173,62 @@ const Herbs = () => {
     }
 
     useEffect(() => {
-        const fetchHerbs = async () => {
-            const response = await fetch('https://healthy-ray-cowboy-boots.cyclic.app/api/herb', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
+        
+        if (!firstGet) {
+            const fetchHerbs = async () => {
+                const response = await fetch('https://healthy-ray-cowboy-boots.cyclic.app/api/herb', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                const json = await response.json()
+    
+                if (response.ok) {
+                    
+                    // setHerbs(json)
+                    dispatch({type: 'SET_HERBS', payload: json})
                 }
-            })
-            const json = await response.json()
-
-            if (response.ok) {
-                
-                // setHerbs(json)
-                dispatch({type: 'SET_HERBS', payload: json})
             }
+            
+            fetchHerbs().then(dispatch({type: 'SEARCH', payload: search}))
+            setFirstGet(true)
+        } else {
+            dispatch({type: 'SEARCH', payload: search})
         }
-        fetchHerbs()
-    }, [])
+        
+        
+    }, [dispatch, search, firstGet])
   return (
     <div>
-        <Navbar bg="dark" variant="dark" fixed="top" expand="md">
+        <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
             <Navbar.Brand className="ms-2 me-auto">Herb Tracker</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{marginRight: '8px'}}/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Container>
-                    <Nav>
-                        {/* <SearchIcon style={{color: 'white', marginTop: '2px', marginRight: '4px', marginLeft: '15px'}}/> */}
-                        <input style={{marginTop: '5px', marginBottom: '5px'}}placeholder="🔍 Search..." type="text" />
+                <Container style={{width: '380px'}}>
+                    <Nav style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <span><input autoComplete="off" style={{marginTop: '5px', marginBottom: '5px', marginRight: '5px'}}placeholder="🔍 Search..." type="text" value={search} onKeyUp={handleSearch} onInput={handleSearch}/>
+                        <img src={close} alt="clear search" style={{width: '30px', height: '30px', marginBottom: '4px'}} onClick={clearSearch}/></span>
                         
                     </Nav>
                 </Container>
-                <Container>
-                    <Nav>
-                        <Button onClick={handleShow} variant="success">Add Herb</Button>
+                <Container style={{width: '120px'}}>
+                    <Nav style={{display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
+                        <Button onClick={handleShow} variant="success" style={{width: '100px'}}>Add Herb</Button>
                     </Nav>
                 </Container>
-                <Container>
-                    <Nav className="float-end">
-                    <Navbar.Text className="ms-auto">logout here</Navbar.Text>
+                <Container style={{width: '240px'}}>
+                    <Nav style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
+                    <Navbar.Text className="mx-auto">Username</Navbar.Text>
+                    <Button className="mx-auto">Logout</Button>
                     </Nav>
                 </Container>
             </Navbar.Collapse>
         </Navbar>
         <main style={{marginTop: '60px'}}>
-            <Row xs={1} sm={2} md={3} lg={4} xl={5} xxl={6}>
-            {!herbs ? 'Loading...' : herbs.map((item, index) => {
+            <Row xs={2} sm={3} md={4} lg={5} xl={6} xxl={7}>
+               
+            {!results ? 'Loading...' : results.map((item, index) => {
                 let year = Number(item.expiry.substring(0, 4))
                 let mongoID = item._id                
                 let month = monthNames[Number(item.expiry.substring(5, 7)) - 1]
@@ -219,7 +255,7 @@ const Herbs = () => {
                 }
                 let cardStyle = {
                     backgroundColor: `rgba(${red}, ${green}, 0, ${opacity}`,
-                    margin: '5px'
+                    margin: '4px'
                 }
                 // console.log(`daydiff: ${diffInDays}, part: ${part}, r: ${red} g: ${green} o: ${opacity}`)
                 return (
@@ -227,7 +263,7 @@ const Herbs = () => {
                         <Card style={cardStyle} key={index}>
                         <Card.Body>
                             <Card.Title>
-                                <img src={close} id={mongoID} style={{position: 'absolute', top: '2px', right: '2px', zIndex: '99', background: '#fff', borderRadius: '50%',
+                                <img src={close} alt="delete" id={mongoID} style={{position: 'absolute', top: '2px', right: '2px', zIndex: '99', background: '#fff', borderRadius: '50%',
                                             width: '20px', height: '20px', textAlign: 'center', border: '1px solid black', padding: '0px', cursor: 'pointer'}}  
                                             onClick={handleDelete} />
                                     
@@ -239,7 +275,7 @@ const Herbs = () => {
                                 Expiry: {properDate}</Card.Text>
                             <Card.Footer style={{textAlign: 'center'}}>
                             Amount left:<br/>
-                            <input type="range" style={{backgroundColor: '#000'}} min="1" max="100" defaultValue={item.amount} id={item._id} onTouchEnd={handleSlider} onMouseUp={handleSlider} />
+                            <input type="range" style={{backgroundColor: '#000', width: '100px'}} min="1" max="100" defaultValue={item.amount} id={item._id} onTouchEnd={handleSlider} onMouseUp={handleSlider} />
                             </Card.Footer>
                         </Card.Body>
                     </Card>
