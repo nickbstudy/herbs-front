@@ -21,6 +21,7 @@ export const herbsReducer = (state, action) => {
             console.log(newHerb)
             let ifThis = newHerb.name.toLowerCase()
             let target = action.payload.search.toLowerCase()
+            console.log(`comparison: ifThis: ${ifThis} target: ${target}`)
             if (!action.payload.search) {
                 console.log('!action.payload.search')
                 return {
@@ -37,9 +38,11 @@ export const herbsReducer = (state, action) => {
                 }
             } else {
                 console.log('else')
+                console.log(state.results)
+                
                 return {
                     herbs: [newHerb, ...state.herbs],
-                    results: [state.results]
+                    
                 }
             }
         case 'DISCARD_HERB':

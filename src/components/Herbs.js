@@ -15,7 +15,10 @@ const Herbs = () => {
     const [formYear, setFormYear] = useState(2023)
     const [formVal, setFormVal] = useState([false, false, false])
     const [show, setShow] = useState(false)
+    const [extended, setExtended] = useState(false)
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+
 
     const handleClose = () => {
         setShow(false);
@@ -129,7 +132,7 @@ const Herbs = () => {
                     setFormMonth("")
                     setFormYear(2023)
                     setShow(false)
-                    
+                    dispatch({type: 'SEARCH', payload: search})
                 }
             }
 
@@ -172,6 +175,16 @@ const Herbs = () => {
         updateAmount()
     }
 
+    const navbarToggleHandler = () => {
+        if (!extended) {
+            setExtended(true)
+        } else {
+            setExtended(false)
+        }
+        
+        
+    }
+
     useEffect(() => {
         
         if (!firstGet) {
@@ -203,7 +216,7 @@ const Herbs = () => {
     <div>
         <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
             <Navbar.Brand className="ms-2 me-auto">Herb Tracker</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{marginRight: '8px'}}/>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{marginRight: '24px'}} onClick={navbarToggleHandler}/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Container style={{width: '380px'}}>
                     <Nav style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -225,8 +238,8 @@ const Herbs = () => {
                 </Container>
             </Navbar.Collapse>
         </Navbar>
-        <main style={{marginTop: '60px'}}>
-            <Row xs={2} sm={3} md={4} lg={5} xl={6} xxl={7}>
+        <main style={{marginTop: extended ? '180px' : '60px'}}>
+            <Row xs={2} sm={3} md={4} lg={5} xl={6} xxl={7} >
                
             {!results ? 'Loading...' : results.map((item, index) => {
                 let year = Number(item.expiry.substring(0, 4))
