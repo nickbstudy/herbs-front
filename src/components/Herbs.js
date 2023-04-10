@@ -19,7 +19,6 @@ const Herbs = () => {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 
-
     const handleClose = () => {
         setShow(false);
         setFormName("")
@@ -27,7 +26,9 @@ const Herbs = () => {
         setFormYear(2023)
         setFormVal([false, false, false])
     }
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true);
+    }
 
     const handleSearch = async (e) => {
         setSearch(e.target.value)
@@ -305,7 +306,7 @@ const Herbs = () => {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Herb Name</Form.Label>
-                        <Form.Control type="text" id="newHerbName" value={formName} onChange={handleFormName} autoComplete="off" required/>
+                        <Form.Control type="text" id="newHerbName" autoFocus value={formName} onChange={handleFormName} autoComplete="off" required/>
                         <div className={formVal[0] ? 'visible' : 'invisible'} style={{color: "red"}}>Name required</div>
                     </Form.Group>
                     <Form.Group>
