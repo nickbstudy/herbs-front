@@ -216,7 +216,7 @@ const Herbs = () => {
     <div>
         <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
             <Navbar.Brand className="ms-2 me-auto">Herb Tracker</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{marginRight: '24px'}} onClick={navbarToggleHandler}/>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{marginRight: '10px'}} onClick={navbarToggleHandler}/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Container style={{width: '380px'}}>
                     <Nav style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -238,7 +238,7 @@ const Herbs = () => {
                 </Container>
             </Navbar.Collapse>
         </Navbar>
-        <main style={{marginTop: extended ? '180px' : '60px'}}>
+    <main style={{marginTop: extended ? '180px' : '60px', transition: "all 250ms ease-in-out"}}>
             <Row xs={2} sm={3} md={4} lg={5} xl={6} xxl={7} >
                
             {!results ? 'Loading...' : results.map((item, index) => {
